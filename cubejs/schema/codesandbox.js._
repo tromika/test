@@ -1,0 +1,38 @@
+cube(`codesandbox`, {
+  sql: `
+    select 
+      * 
+    from codesandbox.stars
+  `,
+
+  measures: {
+    stars: {
+      sql: `user_id`,
+      type: `countDistinct`,
+      title: `Number of new stars`,
+      description: `Count of users who starred the given repository on Github`
+    },
+    cumulativeStars: {
+      sql: `user_id`,
+      type: `count`,
+      rollingWindow: {
+        trailing: `unbounded`
+      },
+      title: `Number of stars over time`,
+      description: `Cumulative sum of stars`
+    }
+  },
+
+  dimensions: {
+    repo: {
+      sql: `_sdc_repository`,
+      type: `string`,
+      title: `Github repository`
+    },
+    date: {
+      sql: "starred_at",
+      type: `time`,
+      title: `Date`
+    }
+  }
+});
